@@ -2,7 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CustomerHub.Application.Dto;
+using CustomerHub.Application.Services;
+using CustomerHub.Application.Services.Interfaces;
 using CustomerHub.Data.Context;
+using CustomerHub.Domain.User;
+using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +34,18 @@ namespace CustomerHub.Api
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddDbContext<CustomerHubDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICustomerService, CustomerService>();
+
+            services.AddOData();
+
+            var config = new AutoMapper.MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<UserDto, User>();
+            });
+            var mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -43,7 +60,11 @@ namespace CustomerHub.Api
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routeBuilder =>
+            {
+                routeBuilder.EnableDependencyInjection();
+                routeBuilder.Expand().Select().Count().OrderBy();
+            });
         }
     }
 }

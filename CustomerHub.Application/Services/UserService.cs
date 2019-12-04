@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using CustomerHub.Domain.User;
+using CustomerHub.Application.Services.Interfaces;
 
 namespace CustomerHub.Application.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly CustomerHubDbContext _dbContext;
         private readonly IMapper _mapper;

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CustomerHub.Application.Dto;
+using CustomerHub.Application.Services.Interfaces;
 using CustomerHub.Data.Context;
 using CustomerHub.Domain.Customer;
 using System;
@@ -8,7 +9,7 @@ using System.Linq;
 
 namespace CustomerHub.Application.Services
 {
-    public class CustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly CustomerHubDbContext _dbContext;
         private readonly IMapper _mapper;
