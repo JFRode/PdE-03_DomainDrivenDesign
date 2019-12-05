@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CustomerHub.Application.Dto;
-using CustomerHub.Application.Services;
-using CustomerHub.Application.Services.Interfaces;
+using CustomerHub.Application.Ioc;
+using CustomerHub.Application.Mappers;
 using CustomerHub.Data.Context;
-using CustomerHub.Domain.User;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,17 +33,17 @@ namespace CustomerHub.Api
             services.AddDbContext<CustomerHubDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<IUserService, UserService>();
-            services.AddTransient<ICustomerService, CustomerService>();
-
-            services.AddOData();
-
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-                cfg.CreateMap<UserDto, User>();
+                cfg.AddProfile(new DtoToDomainProfile());
+                cfg.AddProfile(new DomainToDtoProfile());
             });
+
             var mapper = config.CreateMapper();
             services.AddSingleton(mapper);
+
+            services.AddOData();
+            IocService.Register(services);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
