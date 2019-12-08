@@ -1,17 +1,19 @@
 ﻿using CustomerHub.Application.Dto;
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CustomerHub.Application.Services.Interfaces
 {
     public interface ICustomerService
     {
-        IEnumerable<CustomerDto> Get();
+        Task<IEnumerable<CustomerDto>> Get(CancellationToken cancellationToken);
 
-        void Add(CustomerDto customerDto);
+        Task<CustomerDto> Add(CustomerDto customerDto, CancellationToken cancellationToken);
 
-        void Update(CustomerDto customerDto);
+        Task<CustomerDto> Update(CustomerDto customerDto, CancellationToken cancellationToken);
 
-        void Remove(Guid customerId);
+        Task<CustomerDto> Remove(Guid customerId, CancellationToken cancellationToken);
     }
 }

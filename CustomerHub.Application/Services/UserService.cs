@@ -6,6 +6,9 @@ using System.Linq;
 using System;
 using CustomerHub.Domain.User;
 using CustomerHub.Application.Services.Interfaces;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace CustomerHub.Application.Services
 {
@@ -20,28 +23,32 @@ namespace CustomerHub.Application.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<UserDto> Get()
+        public async Task<IEnumerable<UserDto>> Get(CancellationToken cancellationToken)
         {
-            return _mapper.Map<List<UserDto>>(_dbContext.Users.ToList());
+            var data = await _dbContext.Users.ToListAsync(cancellationToken);
+            return _mapper.Map<List<UserDto>>(data);
         }
 
-        public void Add(UserDto userDto)
+        public async Task<UserDto> Add(UserDto userDto, CancellationToken cancellationToken)
         {
             _dbContext.Users.Add(_mapper.Map<User>(userDto));
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return userDto;
         }
 
-        public void Update(UserDto userDto)
+        public async Task<UserDto> Update(UserDto userDto, CancellationToken cancellationToken)
         {
             _dbContext.Users.Update(_mapper.Map<User>(userDto));
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return userDto;
         }
 
-        public void Remove(Guid userId)
+        public async Task<UserDto> Remove(Guid userId, CancellationToken cancellationToken)
         {
             var user = _dbContext.Users.FirstOrDefault(u => u.Id == userId);
             _dbContext.Users.Remove(user);
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync(cancellationToken);
+            return _mapper.Map<UserDto>(user);
         }
     }
 }

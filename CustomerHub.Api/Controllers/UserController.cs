@@ -3,7 +3,8 @@ using CustomerHub.Application.Services.Interfaces;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CustomerHub.Api.Controllers
 {
@@ -19,30 +20,59 @@ namespace CustomerHub.Api.Controllers
 
         [HttpGet]
         [EnableQuery()]
-        public IEnumerable<UserDto> Get()
+        public async Task<IActionResult> Get(CancellationToken cancellationToken)
         {
-            return _userService.Get();
+            try
+            {
+                var result = await _userService.Get(cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Something is wrong, check exception stack trace: {ex.StackTrace}");
+            }
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] UserDto userDto)
+        public async Task<IActionResult> Post([FromBody] UserDto userDto, CancellationToken cancellationToken)
         {
-            _userService.Add(userDto);
-            return new NoContentResult();
+            try
+            {
+                var result = await _userService.Add(userDto, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Something is wrong, check exception stack trace: {ex.StackTrace}");
+            }
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] UserDto userDto)
+        public async Task<IActionResult> Update([FromBody] UserDto userDto, CancellationToken cancellationToken)
         {
-            _userService.Update(userDto);
-            return new NoContentResult();
+            try
+            {
+                var result = await _userService.Update(userDto, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Something is wrong, check exception stack trace: {ex.StackTrace}");
+            }
         }
 
         [HttpDelete("{userId}")]
-        public IActionResult Delete(Guid userId)
+        public async Task<IActionResult> Delete(Guid userId, CancellationToken cancellationToken)
         {
-            _userService.Remove(userId);
-            return new NoContentResult();
+            try
+            {
+                var result = await _userService.Remove(userId, cancellationToken);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Something is wrong, check exception stack trace: {ex.StackTrace}");
+            }
         }
     }
 }
