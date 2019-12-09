@@ -14,4 +14,4 @@ This is a simple project to practice code, especially DDD (**Domain Driven Desig
 * Dependency Injection
 * AutoMapper
 * OData
-
+* JWT (Json Web Token)
