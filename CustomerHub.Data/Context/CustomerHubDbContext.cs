@@ -1,8 +1,6 @@
 ﻿using CustomerHub.Domain.Customer;
 using CustomerHub.Domain.User;
-using Microsoft.Extensions.Configuration;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace CustomerHub.Data.Context
 {

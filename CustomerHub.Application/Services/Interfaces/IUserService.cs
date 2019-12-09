@@ -10,6 +10,8 @@ namespace CustomerHub.Application.Services.Interfaces
     {
         Task<IEnumerable<UserDto>> Get(CancellationToken cancellationToken);
 
+        Task<UserDto> GetByEmailAndPassword(string email, string password, CancellationToken cancellationToken);
+
         Task<UserDto> Add(UserDto userDto, CancellationToken cancellationToken);
 
         Task<UserDto> Update(UserDto userDto, CancellationToken cancellationToken);

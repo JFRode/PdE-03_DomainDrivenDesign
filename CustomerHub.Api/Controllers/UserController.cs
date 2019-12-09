@@ -1,6 +1,7 @@
 ﻿using CustomerHub.Application.Dto;
 using CustomerHub.Application.Services.Interfaces;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 namespace CustomerHub.Api.Controllers
 {
     [Route("[controller]")]
+    [Authorize()]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

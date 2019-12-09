@@ -29,6 +29,13 @@ namespace CustomerHub.Application.Services
             return _mapper.Map<List<UserDto>>(data);
         }
 
+        public async Task<UserDto> GetByEmailAndPassword(string email, string password, CancellationToken cancellationToken)
+        {
+            var data = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email && x.Password == password,
+                cancellationToken);
+            return _mapper.Map<UserDto>(data);
+        }
+
         public async Task<UserDto> Add(UserDto userDto, CancellationToken cancellationToken)
         {
             _dbContext.Users.Add(_mapper.Map<User>(userDto));
